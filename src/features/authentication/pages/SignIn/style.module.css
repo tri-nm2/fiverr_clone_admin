@@ -1,0 +1,23 @@
+.signInForm {
+  max-width: 400px;
+  margin: 0px auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  padding: 36px 20px;
+  box-shadow: 0 0 8px #95979d;
+  margin-top: 35px;
+}
+
+.signInForm .inputGroup {
+  width: 100%;
+  margin-bottom: 20px;
+  text-align: left;
+}
+
+.signInForm .inputGroup .errorMessage {
+  color: red;
+  display: block;
+  margin-top: 5px;
+}
