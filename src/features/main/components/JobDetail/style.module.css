@@ -1,0 +1,25 @@
+.detail {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.detail .content {
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+.detail .content span {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.detail .content .thumbnail {
+  width: 200px;
+  margin: 0 auto;
+}
+
+.detail .content .thumbnail img {
+  width: 100%;
+}
