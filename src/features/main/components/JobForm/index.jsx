@@ -7,22 +7,47 @@ import { useFormik } from "formik";
 function JobForm(props) {
   const userId = localStorage.getItem("id");
   const jobMenu = props.jobMenu;
+  const selectedJob = props.selectedJob;
   const initialValues = {
-    id: 0,
-    tenCongViec: "",
-    danhGia: 0,
-    giaTien: 0,
+    id: selectedJob?.id,
+    tenCongViec: selectedJob?.tenCongViec,
+    danhGia: selectedJob?.danhGia,
+    giaTien: selectedJob?.giaTien,
     nguoiTao: +userId,
-    hinhAnh: "",
-    moTa: "",
-    maChiTietLoaiCongViec: 0,
-    moTaNgan: "",
-    saoCongViec: 0,
+    hinhAnh: null,
+    moTa: selectedJob?.moTa,
+    maChiTietLoaiCongViec: selectedJob?.maChiTietLoaiCongViec,
+    moTaNgan: selectedJob?.moTaNgan,
+    saoCongViec: selectedJob?.saoCongViec,
   };
   const formik = useFormik({
     initialValues,
     onSubmit: (values) => {
-      props.handleSubmit(values, null, "Create");
+      const imageInfo = selectedJob ? selectedJob.hinhAnh : "";
+      const jobInfo = {
+        id: values.id,
+        tenCongViec: values.tenCongViec,
+        danhGia: values.danhGia,
+        giaTien: values.giaTien,
+        nguoiTao: +userId,
+        hinhAnh: imageInfo,
+        moTa: values.moTa,
+        maChiTietLoaiCongViec: values.maChiTietLoaiCongViec,
+        moTaNgan: values.moTaNgan,
+        saoCongViec: values.saoCongViec,
+      };
+
+      let image = null;
+      if (values.hinhAnh) {
+        image = new FormData();
+        image.append("formFile", values.hinhAnh, values.hinhAnh.name);
+      }
+
+      if (selectedJob) {
+        props.handleSubmit(jobInfo, image, "Update");
+      } else {
+        props.handleSubmit(jobInfo, image, "Create");
+      }
     },
   });
 
@@ -41,6 +66,10 @@ function JobForm(props) {
 
   const handleChangeJobTypeDetail = (value) => {
     formik.setFieldValue("maChiTietLoaiCongViec", value);
+  };
+
+  const handleChangeImage = (info) => {
+    formik.setFieldValue("hinhAnh", info.file);
   };
   //Events
 
@@ -102,6 +131,7 @@ function JobForm(props) {
               style={{ width: "100%" }}
               min={0}
               value={formik.values.danhGia}
+              defaultValue={0}
               onChange={handleRatingChange}
             ></InputNumber>
           </div>
@@ -112,6 +142,7 @@ function JobForm(props) {
               name="giaTien"
               style={{ width: "100%" }}
               min={0}
+              defaultValue={0}
               value={formik.values.giaTien}
               onChange={handlePriceChange}
             ></InputNumber>
@@ -119,7 +150,12 @@ function JobForm(props) {
 
           <div className={Style.filePicker}>
             <span className={Style.title}>Hình ảnh</span>
-            <Upload listType="picture" maxCount={1} beforeUpload={() => false}>
+            <Upload
+              listType="picture"
+              maxCount={1}
+              beforeUpload={() => false}
+              onChange={handleChangeImage}
+            >
               <Button icon={<UploadOutlined />}>Chọn hình</Button>
             </Upload>
           </div>
@@ -150,6 +186,7 @@ function JobForm(props) {
             <span>Chi tiết loại công việc</span>
             <TreeSelect
               showSearch
+              allowClear
               style={{
                 width: "100%",
               }}
@@ -158,7 +195,7 @@ function JobForm(props) {
                 overflow: "auto",
               }}
               placeholder="Vui lòng chọn loại công việc"
-              allowClear
+              value={formik.values.maChiTietLoaiCongViec}
               onChange={handleChangeJobTypeDetail}
             >
               {renderTreeNode()}
@@ -169,6 +206,7 @@ function JobForm(props) {
             <span>Sao công việc</span>
             <Rate
               name="saoCongViec"
+              defaultValue={0}
               value={formik.values.saoCongViec}
               onChange={handleChangeRate}
             />

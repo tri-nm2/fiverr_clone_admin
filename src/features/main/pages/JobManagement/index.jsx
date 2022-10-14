@@ -1,4 +1,4 @@
-import { Button, Table, Rate, Tooltip, Modal } from "antd";
+import { Button, Table, Rate, Tooltip, Modal, Input } from "antd";
 import { EditOutlined, DeleteOutlined, ReadOutlined } from "@ant-design/icons";
 import React, { useEffect, useRef, useState } from "react";
 import instance from "api/instance";
@@ -88,9 +88,9 @@ function JobManagement() {
                     ? { display: "block" }
                     : { display: "none" }
                 }
-                // onClick={() => {
-                //   handleSelectJobType(item.id);
-                // }}
+                onClick={() => {
+                  handleUpdateJob(job.id);
+                }}
               >
                 <EditOutlined />
               </button>
@@ -119,6 +119,7 @@ function JobManagement() {
   const [selectedJob, setSelectedJob] = useState(null);
   const createUser = useRef(null);
   const jobMenu = useRef(null);
+  const keyWord = useRef("");
 
   //Hooks
   useEffect(() => {
@@ -136,6 +137,7 @@ function JobManagement() {
         params: {
           pageIndex: paginationConfig.currentPage,
           pageSize: paginationConfig.pageSize,
+          keyword: keyWord.current,
         },
       });
 
@@ -228,6 +230,36 @@ function JobManagement() {
       return null;
     }
   };
+
+  const updatejob = async (jobInfo) => {
+    try {
+      const response = await instance.request({
+        url: `/api/cong-viec/${jobInfo.id}`,
+        method: "PUT",
+        data: jobInfo,
+      });
+
+      if (response.status === 200) return true;
+    } catch (error) {
+      console.log(error.response.data.content);
+      return false;
+    }
+  };
+
+  const uploadJobImage = async (image, jobId) => {
+    try {
+      const response = await instance.request({
+        url: `api/cong-viec/upload-hinh-cong-viec/${jobId}`,
+        method: "POST",
+        data: image,
+      });
+
+      if (response.status === 200) return true;
+    } catch (error) {
+      console.log(error.response.data.content);
+      return false;
+    }
+  };
   //Api functions
 
   //Message Boxes
@@ -269,22 +301,60 @@ function JobManagement() {
     setOpenModal(false);
   };
 
-  const handleCreateJob = async () => {
-    await fetchMenu();
-    setOpenModal(true);
-  };
-
   const handleSubmit = async (jobInfo, image, action) => {
     switch (action) {
       case "Create":
         const jobId = await createJob(jobInfo);
         if (jobId) {
-          fetchJobList();
-          showSuccess(CREATE_SUCCESS_MESSAGE);
+          if (image) {
+            const result = await uploadJobImage(image, jobId);
+            if (result) {
+              fetchJobList();
+              showSuccess(CREATE_SUCCESS_MESSAGE);
+            }
+          } else {
+            fetchJobList();
+            showSuccess(CREATE_SUCCESS_MESSAGE);
+          }
+        }
+        break;
+      case "Update":
+        const resultUpdateInfo = await updatejob(jobInfo);
+        if (resultUpdateInfo) {
+          if (image) {
+            const resultUpdateImage = await uploadJobImage(image, jobInfo.id);
+            if (resultUpdateImage) {
+              fetchJobList();
+              showSuccess(UPDATE_SUCCESS_MESSAGE);
+            }
+          } else {
+            fetchJobList();
+            showSuccess(UPDATE_SUCCESS_MESSAGE);
+          }
         }
         break;
       default:
         break;
+    }
+  };
+
+  const handleCreateJob = async () => {
+    await fetchMenu();
+    setOpenModal(true);
+  };
+
+  const handleUpdateJob = async (id) => {
+    await fetchJobById(id);
+    await fetchMenu();
+    setOpenModal(true);
+  };
+
+  const handleSearch = (value) => {
+    keyWord.current = value;
+    if (paginationConfig.currentPage === 1) {
+      fetchJobList();
+    } else {
+      setPaginationConfig({ ...paginationConfig, currentPage: 1 });
     }
   };
   //Events
@@ -301,9 +371,16 @@ function JobManagement() {
 
   return (
     <div className={Style.job}>
-      <Button className={Style.btn} type="primary" onClick={handleCreateJob}>
-        Thêm công việc
-      </Button>
+      <div className={Style.jobHeader}>
+        <Button className={Style.btn} type="primary" onClick={handleCreateJob}>
+          Thêm công việc
+        </Button>
+        <Input.Search
+          className={Style.txtSearch}
+          placeholder="Nhập từ khóa tìm kiếm"
+          onSearch={handleSearch}
+        ></Input.Search>
+      </div>
       <Table
         columns={columns}
         dataSource={jobList}
@@ -319,6 +396,7 @@ function JobManagement() {
         open={openDetail}
         onCancel={() => {
           setOpenDetail(false);
+          setSelectedJob(null);
         }}
         destroyOnClose
         footer={[]}
@@ -331,6 +409,7 @@ function JobManagement() {
         open={openModal}
         onCancel={() => {
           setOpenModal(false);
+          setSelectedJob(null);
         }}
         destroyOnClose
         footer={[]}
@@ -338,6 +417,7 @@ function JobManagement() {
         <JobForm
           handleCloseModal={handleCloseModal}
           handleSubmit={handleSubmit}
+          selectedJob={selectedJob}
           jobMenu={jobMenu.current}
         />
       </Modal>
