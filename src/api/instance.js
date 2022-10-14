@@ -8,4 +8,10 @@ const instance = axios.create({
   },
 });
 
+instance.interceptors.request.use((config) => {
+  const userToken = localStorage.getItem("token");
+  config.headers = { ...config.headers, token: userToken };
+  return config;
+});
+
 export default instance;

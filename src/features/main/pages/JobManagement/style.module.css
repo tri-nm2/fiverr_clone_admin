@@ -1,0 +1,33 @@
+.hidden {
+  display: none;
+}
+
+.show {
+  display: block;
+}
+
+.job {
+  text-align: left;
+  padding-left: 20px;
+}
+
+.job .jobHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 10px 0px 20px 10px;
+}
+
+.job .txtSearch {
+  margin-right: 20px;
+  width: 50%;
+}
+
+.job .btnGroup {
+  display: flex;
+  justify-content: center;
+}
+
+.job .btnGroup button {
+  margin: 0px 5px;
+}
