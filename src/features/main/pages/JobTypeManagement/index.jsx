@@ -1,5 +1,5 @@
 import { Button, Table, Tooltip, Modal } from "antd";
-import { EditOutlined, DeleteOutlined, FormOutlined } from "@ant-design/icons";
+import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import instance from "api/instance";
 import React, { useEffect, useState } from "react";
 import Style from "./style.module.css";
@@ -49,15 +49,6 @@ function JobTypeManagement() {
                 }}
               >
                 <DeleteOutlined />
-              </button>
-            </Tooltip>
-            <Tooltip title="Thêm chi tiết">
-              <button
-                onClick={() => {
-                  handleCreateJobTypeDetailGroup(item.id);
-                }}
-              >
-                <FormOutlined />
               </button>
             </Tooltip>
           </div>
@@ -190,47 +181,6 @@ function JobTypeManagement() {
 
   const handleCloseModal = () => {
     setOpenModal(false);
-  };
-
-  const handleCreateJobTypeDetailGroup = async (id) => {
-    // const danhSachChiTiet = [
-    //   { id: 0, tenChiTiet: "Game Tester" },
-    //   { id: 0, tenChiTiet: "Software Tester" },
-    // ];
-
-    const danhSachChiTiet = [
-      {
-        id: 2,
-        tenChiTiet: "Logo Design",
-      },
-      {
-        id: 3,
-        tenChiTiet: "Brand Style Guides",
-      },
-    ];
-
-    // const data = new FormData();
-    // data.append("id", 0);
-    // data.append("tenChiTiet", "Tester");
-    // data.append("maLoaiCongViec", id);
-    // danhSachChiTiet.forEach((item) => data.append("danhSachChiTiet[]", item));
-    const data = {
-      id: 0,
-      tenChiTiet: "Tester",
-      maLoaiCongViec: id,
-      danhSachChiTiet: danhSachChiTiet,
-    };
-
-    try {
-      const response = await instance.request({
-        url: "/api/chi-tiet-loai-cong-viec/sua-nhom-chi-tiet-loai/35",
-        method: "PUT",
-        data: data,
-      });
-      console.log(response.data.content);
-    } catch (error) {
-      console.log(error.response.data.content);
-    }
   };
   //Events
 
