@@ -10,7 +10,22 @@ function PageSidebar() {
       key: "item2",
       label: <NavLink to="/jobmanagement">Quản lý công việc</NavLink>,
     },
-    { key: "item3", label: <NavLink to="/">Quản lý loại công việc</NavLink> },
+    {
+      key: "item3",
+      label: "Quản lý loại công việc",
+      children: [
+        {
+          key: "sub-item1",
+          label: <NavLink to="/">Loại công việc</NavLink>,
+        },
+        {
+          key: "sub-item2",
+          label: (
+            <NavLink to="/jobtypegroupmanagement">Nhóm loại công việc</NavLink>
+          ),
+        },
+      ],
+    },
     { key: "item4", label: <NavLink to="/">Quản lý dịch vụ</NavLink> },
   ];
   return (

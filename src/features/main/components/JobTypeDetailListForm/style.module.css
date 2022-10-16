@@ -1,0 +1,29 @@
+.detailList {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.detailList .btnGroup {
+  display: flex;
+}
+
+.detailList .btnGroup button {
+  margin: 0px 5px;
+}
+
+.detailForm {
+  margin-bottom: 20px;
+  display: flex;
+}
+
+.detailForm .txtInput {
+  margin-bottom: 10px;
+  border-right: 0px;
+}
+
+.detailForm .btn {
+  display: flex;
+  justify-content: flex-end;
+}
