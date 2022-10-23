@@ -3,14 +3,17 @@ import { useFormik } from "formik";
 import * as yup from "yup";
 import { Button, Input } from "antd";
 import Style from "./style.module.css";
-import { REQUIRED_MESSAGE } from "commons/constants/messages";
+import {
+  REQUIRED_MESSAGE,
+  EMAIL_FORMAT_MESSAGE,
+} from "commons/constants/messages";
 import { signInAction } from "../../action";
 import { useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
 
 function SignIn() {
   const schema = yup.object().shape({
-    email: yup.string().required(REQUIRED_MESSAGE),
+    email: yup.string().required(REQUIRED_MESSAGE).email(EMAIL_FORMAT_MESSAGE),
     passWord: yup.string().required(REQUIRED_MESSAGE),
   });
 
@@ -50,7 +53,7 @@ function SignIn() {
               ></Input>
               {formik.errors.email && formik.touched.email && (
                 <span className={Style.errorMessage}>
-                  {formik.errors.passWord}
+                  {formik.errors.email}
                 </span>
               )}
             </div>
