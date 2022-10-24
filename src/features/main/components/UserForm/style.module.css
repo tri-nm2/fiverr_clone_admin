@@ -1,0 +1,31 @@
+.form {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.form .content {
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.form .content .label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.form .errorMessage {
+  display: block;
+  color: red;
+  margin-top: 3px;
+}
+
+.form .btnGroup {
+  width: 100%;
+  text-align: right;
+}
+
+.form .btnGroup button {
+  margin-left: 10px;
+}

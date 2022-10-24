@@ -19,6 +19,9 @@ function App() {
   const JobTypeGroupManagement = React.lazy(() =>
     import("features/main/pages/JobTypeGroupManagement")
   );
+  const userManagement = React.lazy(() =>
+    import("features/main/pages/UserManagement")
+  );
   const history = useHistory();
   const dispatch = useDispatch();
   const id = localStorage.getItem("id");
@@ -55,6 +58,12 @@ function App() {
               exact
               redirectPath="/signin"
               Component={JobTypeManagement}
+            />
+            <AuthenRoute
+              path="/usermanagement"
+              exact
+              redirectPath="/signin"
+              Component={userManagement}
             />
             <AuthenRoute
               path="/jobtypegroupmanagement"
