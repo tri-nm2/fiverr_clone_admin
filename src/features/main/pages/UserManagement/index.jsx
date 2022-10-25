@@ -10,6 +10,7 @@ import {
 } from "commons/constants/messages";
 import UserForm from "features/main/components/UserForm";
 import UserDetail from "features/main/components/UserDetail";
+import UserUpdateForm from "features/main/components/UserUpdateForm";
 
 function UserManagement() {
   const [paginationConfig, setPaginationConfig] = useState({
@@ -65,7 +66,11 @@ function UserManagement() {
               </button>
             </Tooltip>
             <Tooltip title="Chỉnh sửa">
-              <button onClick={() => {}}>
+              <button
+                onClick={() => {
+                  handleSelectUser(user.id);
+                }}
+              >
                 <EditOutlined />
               </button>
             </Tooltip>
@@ -86,6 +91,7 @@ function UserManagement() {
   const [selectedUser, setSelectedUser] = useState(null);
   const [openCreateModal, setOpenCreateModal] = useState(false);
   const [openDetailModal, setOpenDetailModal] = useState(false);
+  const [openUpdateModal, setOpenUpdateModal] = useState(false);
   const keyWord = useRef("");
 
   //Hooks
@@ -152,6 +158,23 @@ function UserManagement() {
     }
   };
 
+  const updateUser = async (userInfo) => {
+    try {
+      const response = await instance.request({
+        url: `/api/users/${userInfo.id}`,
+        method: "PUT",
+        data: userInfo,
+      });
+
+      if (response.status === 200) {
+        fetchUserList();
+        showSuccess(UPDATE_SUCCESS_MESSAGE);
+      }
+    } catch (error) {
+      console.log(error.response?.data.content);
+    }
+  };
+
   const deleteUser = async (userId) => {
     try {
       const response = await instance.request({
@@ -179,6 +202,10 @@ function UserManagement() {
       onOk() {
         if (openCreateModal) {
           setOpenCreateModal(false);
+        }
+
+        if (openUpdateModal) {
+          setOpenUpdateModal(false);
         }
       },
     });
@@ -209,6 +236,7 @@ function UserManagement() {
   };
 
   const handleCloseModal = () => {
+    setSelectedUser(null);
     setOpenCreateModal(false);
   };
 
@@ -216,8 +244,22 @@ function UserManagement() {
     createAdmin(adminInfo);
   };
 
+  const handleSelectUser = async (userId) => {
+    await fetchUserById(userId);
+    setOpenUpdateModal(true);
+  };
+
+  const handleUpdateUser = (userInfo) => {
+    updateUser(userInfo);
+  };
+
   const handleDeleteUser = (userId) => {
     showConfirm(userId);
+  };
+
+  const handleCloseUpdateModal = () => {
+    setSelectedUser(null);
+    setOpenUpdateModal(false);
   };
 
   const handleViewDetail = async (userId) => {
@@ -271,7 +313,7 @@ function UserManagement() {
       </Modal>
 
       <Modal
-        title="Thông tin người dùng"
+        title="Thông tin chi tiết"
         open={openDetailModal}
         onCancel={() => {
           setSelectedUser(null);
@@ -281,6 +323,23 @@ function UserManagement() {
         footer={[]}
       >
         <UserDetail selectedUser={selectedUser} />
+      </Modal>
+
+      <Modal
+        title="Cập nhật thông tin"
+        open={openUpdateModal}
+        onCancel={() => {
+          setSelectedUser(null);
+          setOpenUpdateModal(false);
+        }}
+        destroyOnClose
+        footer={[]}
+      >
+        <UserUpdateForm
+          handleUpdateUser={handleUpdateUser}
+          handleCloseUpdateModal={handleCloseUpdateModal}
+          selectedUser={selectedUser}
+        />
       </Modal>
     </div>
   );
