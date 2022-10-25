@@ -1,0 +1,24 @@
+.user {
+  text-align: left;
+  padding-left: 20px;
+}
+
+.user .userHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 10px 0px 20px 10px;
+}
+
+.user .userHeader .txtSearch {
+    width: 50%;
+}
+
+.user .btnGroup {
+  display: flex;
+  justify-content: center;
+}
+
+.user .btnGroup button {
+  margin: 0px 5px;
+}

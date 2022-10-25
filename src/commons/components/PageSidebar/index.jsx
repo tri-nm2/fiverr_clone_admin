@@ -5,7 +5,7 @@ import Style from "./style.module.css";
 
 function PageSidebar() {
   const items = [
-    { key: "item1", label: <NavLink to="/">Quản lý người dùng</NavLink> },
+    { key: "item1", label: <NavLink to="/usermanagement">Quản lý người dùng</NavLink> },
     {
       key: "item2",
       label: <NavLink to="/jobmanagement">Quản lý công việc</NavLink>,
